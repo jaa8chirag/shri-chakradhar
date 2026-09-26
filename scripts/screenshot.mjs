@@ -3,18 +3,27 @@ import { chromium } from "playwright";
 const base = process.argv[2] ?? "http://localhost:3002";
 const outDir = process.argv[3] ?? ".";
 const pages = [
-  ["home-shrichakradhar", "/s/shrichakradhar"],
-  ["browse-shrichakradhar", "/s/shrichakradhar/browse"],
-  ["product-shrichakradhar", "/s/shrichakradhar/p/ignou-majy-2nd-year-hindi-medium-book-mjy-005-008"],
-  ["search-shrichakradhar", "/s/shrichakradhar/search?q=MEG"],
-  ["cart-shrichakradhar", "/s/shrichakradhar/cart"],
-  ["home-ignouproject", "/s/ignouproject"],
-  ["order-project-ignouproject", "/s/ignouproject/order-project"],
+  ["landing", "/"],
+  ["admin-dashboard", "/admin"],
+  ["admin-catalog", "/admin/catalog"],
+  ["admin-orders", "/admin/orders"],
+  ["admin-customers", "/admin/customers"],
+  ["admin-projects", "/admin/projects"],
 ];
 
 const browser = await chromium.launch();
+const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+
+// authenticate once, reuse the session for all admin pages
+const loginPage = await context.newPage();
+await loginPage.goto(`${base}/admin/login`, { waitUntil: "networkidle" });
+await loginPage.fill('input[type="password"]', "demo1234");
+await loginPage.click('button[type="submit"]');
+await loginPage.waitForURL(`${base}/admin`, { timeout: 10000 }).catch(() => {});
+await loginPage.close();
+
 for (const [name, path] of pages) {
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const page = await context.newPage();
   const errors = [];
   page.on("console", (msg) => {
     if (msg.type() === "error") errors.push(msg.text());

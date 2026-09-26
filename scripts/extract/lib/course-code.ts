@@ -1,18 +1,24 @@
 /**
- * IGNOU course codes: 2-6 letters, optional space/hyphen, 1-3 digits (e.g. "MMPC 001", "BEGC-134", "bevae 181").
+ * IGNOU course codes: 2-6 letters, optional space/hyphen, 1-3 digits (e.g. "MMPC 001", "BEGC-134").
  * Normalized form is LETTERS-DIGITS, uppercased, with IGNOU's conventional zero-padding preserved as found
  * (we don't invent padding since IGNOU codes like "MEG 1" and "MMPC 001" are both real and distinct).
+ *
+ * Requires the letters to already be UPPERCASE in the source text. Publishers consistently render
+ * real course codes in full caps even inside otherwise mixed-case titles/prose, whereas ordinary
+ * sentence-case English never is — without this, generic phrases like "within 24 hours" or
+ * "all 4 assignments" false-positive as codes ("WITHIN-24", "ALL-4"), which floods any ranking
+ * built from extracted codes (found via the admin dashboard's "top course codes" list).
  */
-const CODE_RE = /\b([A-Za-z]{2,6})[\s-]?(\d{1,3})\b/g;
+const CODE_RE = /\b([A-Z]{2,6})[\s-]?(\d{1,3})\b/g;
 
-const STOPWORDS = new Set(["PDF", "IN", "OF", "TO", "AND", "OR", "THE", "FOR"]);
+const STOPWORDS = new Set(["PDF", "IN", "OF", "TO", "AND", "OR", "THE", "FOR", "IGNOU", "TMA", "ALL", "ANY", "NEW", "OLD", "FOR", "AND", "THE", "WITH", "FROM", "INTO", "THIS", "YEAR", "TYPE", "ONLY", "EACH", "BOTH", "OVER", "SAME", "SAMPLE"]);
 
 export function extractCourseCodes(text: string): string[] {
   if (!text) return [];
   const found = new Set<string>();
   const matches = text.matchAll(CODE_RE);
   for (const m of matches) {
-    const letters = m[1].toUpperCase();
+    const letters = m[1];
     const digits = m[2];
     if (STOPWORDS.has(letters)) continue;
     if (letters.length < 2 || letters.length > 6) continue;

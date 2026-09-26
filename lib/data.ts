@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { Brand, BrandId, BrandPages, CategoryNode, Product, Stats } from "./types";
 
@@ -75,4 +75,31 @@ export async function getPages(): Promise<Record<BrandId, BrandPages>> {
 export async function getStats(): Promise<Stats> {
   if (!cache.stats) cache.stats = await readJson<Stats>("stats.json");
   return cache.stats;
+}
+
+/**
+ * Admin demo "wow moment": toggling a brand's visibility for a product writes straight through
+ * to catalog.json and updates the in-memory cache so every request in this server process sees
+ * it immediately — the same seam a real .NET API + Postgres UPDATE would sit behind later.
+ */
+export async function setProductVisibility(productId: string, brandId: BrandId, visible: boolean): Promise<Product | undefined> {
+  const catalog = await getCatalog();
+  const product = catalog.find((p) => p.id === productId);
+  if (!product) return undefined;
+
+  const has = product.availableOn.includes(brandId);
+  if (visible && !has) product.availableOn.push(brandId);
+  if (!visible && has) product.availableOn = product.availableOn.filter((b) => b !== brandId);
+
+  await writeFile(path.join(DATA_DIR, "catalog.json"), JSON.stringify(catalog, null, 2));
+  return product;
+}
+
+export async function updateProductPrice(productId: string, price: number): Promise<Product | undefined> {
+  const catalog = await getCatalog();
+  const product = catalog.find((p) => p.id === productId);
+  if (!product) return undefined;
+  product.price = price;
+  await writeFile(path.join(DATA_DIR, "catalog.json"), JSON.stringify(catalog, null, 2));
+  return product;
 }

@@ -1,0 +1,101 @@
+[
+  {
+    "id": "PRJ-SEED01",
+    "studentName": "Ananya Verma (demo)",
+    "phone": "9800000001",
+    "programme": "MBA",
+    "courseCode": "MMPP-001",
+    "topic": "Impact of digital marketing on rural retail in Tier-2 India",
+    "stage": "Report Writing",
+    "dueDate": "2026-09-24T13:05:27.529Z",
+    "createdAt": "2026-09-16T13:05:27.529Z"
+  },
+  {
+    "id": "PRJ-SEED02",
+    "studentName": "Rohit Sharma (demo)",
+    "phone": "9800000002",
+    "programme": "MCOM",
+    "courseCode": "MCOP-001",
+    "topic": "Working capital management in Indian FMCG companies",
+    "stage": "Sent for Approval",
+    "dueDate": "2026-09-29T13:05:27.529Z",
+    "createdAt": "2026-09-16T13:05:27.529Z"
+  },
+  {
+    "id": "PRJ-SEED03",
+    "studentName": "Priya Nair (demo)",
+    "phone": "9800000003",
+    "programme": "BAG",
+    "courseCode": "BSOP-001",
+    "topic": "Help me choose a topic",
+    "stage": "Topic",
+    "dueDate": "2026-10-04T13:05:27.529Z",
+    "createdAt": "2026-09-16T13:05:27.529Z"
+  },
+  {
+    "id": "PRJ-SEED04",
+    "studentName": "Aditya Kulkarni (demo)",
+    "phone": "9800000004",
+    "programme": "MSW",
+    "courseCode": "MSWP-001",
+    "topic": "Community-based rehabilitation for differently-abled adults",
+    "stage": "Synopsis Draft",
+    "dueDate": "2026-09-27T13:05:27.529Z",
+    "createdAt": "2026-09-16T13:05:27.529Z"
+  },
+  {
+    "id": "PRJ-SEED05",
+    "studentName": "Sneha Reddy (demo)",
+    "phone": "9800000005",
+    "programme": "MCA",
+    "courseCode": "MCSP-232",
+    "topic": "Mobile app for tracking IGNOU assignment deadlines",
+    "stage": "Delivered",
+    "dueDate": "2026-09-16T13:05:27.529Z",
+    "createdAt": "2026-09-16T13:05:27.529Z"
+  },
+  {
+    "id": "PRJ-SEED06",
+    "studentName": "Vikram Singh (demo)",
+    "phone": "9800000006",
+    "programme": "BCOM",
+    "courseCode": "BCOE-141",
+    "topic": "Consumer awareness of GST among small traders",
+    "stage": "Revision",
+    "dueDate": "2026-09-25T13:05:27.529Z",
+    "createdAt": "2026-09-16T13:05:27.529Z"
+  },
+  {
+    "id": "PRJ-SEED07",
+    "studentName": "Meera Iyer (demo)",
+    "phone": "9800000007",
+    "programme": "MAPC",
+    "courseCode": "MPCE-032",
+    "topic": "Effect of social media use on adolescent anxiety levels",
+    "stage": "Report Writing",
+    "dueDate": "2026-10-01T13:05:27.529Z",
+    "createdAt": "2026-09-16T13:05:27.529Z"
+  },
+  {
+    "id": "PRJ-SEED08",
+    "studentName": "Karan Malhotra (demo)",
+    "phone": "9800000008",
+    "programme": "MBA",
+    "courseCode": "MMPP-001",
+    "topic": "Employee retention strategies in Indian IT startups",
+    "stage": "Sent for Approval",
+    "dueDate": "2026-09-28T13:05:27.529Z",
+    "createdAt": "2026-09-16T13:05:27.529Z"
+  },
+  {
+    "id": "PRJ-SEED09",
+    "studentName": "Fatima Sheikh (demo)",
+    "phone": "9800000009",
+    "programme": "BSW",
+    "courseCode": "BSWP-001",
+    "topic": "Help me choose a topic",
+    "stage": "Topic",
+    "dueDate": "2026-10-05T13:05:27.529Z",
+    "createdAt": "2026-09-16T13:05:27.529Z"
+  }
+]
