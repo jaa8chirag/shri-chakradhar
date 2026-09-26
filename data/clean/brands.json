@@ -1,0 +1,145 @@
+[
+  {
+    "id": "shrichakradhar",
+    "domain": "shrichakradhar.com",
+    "name": "Shri Chakradhar Publication Private limited",
+    "tagline": "IGNOU help books, projects & solved assignments — one trusted source since day one",
+    "logo": "/brands/shrichakradhar/logo.webp",
+    "favicon": "/brands/shrichakradhar/favicon.webp",
+    "colors": {
+      "primary": "#f2820a",
+      "secondary": "#0f172a"
+    },
+    "phones": [
+      "+919354637830",
+      "919354637830",
+      "8095703125",
+      "9091796875"
+    ],
+    "email": null,
+    "whatsapp": null,
+    "address": null,
+    "social": {
+      "facebook": "https://www.facebook.com/Shri-Chakradhar-Publication-106348514278187/",
+      "instagram": "https://www.instagram.com/shri__chakradhar/",
+      "twitter": "https://twitter.com/shri_chakradhar",
+      "youtube": "https://www.youtube.com/"
+    },
+    "productTypes": [
+      "HelpBook",
+      "SolvedAssignment",
+      "GuessPaper",
+      "Project",
+      "Combo"
+    ]
+  },
+  {
+    "id": "ignouproject",
+    "domain": "ignouproject.com",
+    "name": "IGNOU PROJECT",
+    "tagline": "Custom IGNOU project & synopsis writing — synopsis next day, report in ~8 days",
+    "logo": "/brands/ignouproject/logo.svg",
+    "favicon": "/brands/ignouproject/favicon.webp",
+    "colors": {
+      "primary": "#0f766e",
+      "secondary": "#0f172a"
+    },
+    "phones": [
+      "+919354637830",
+      "919354637830"
+    ],
+    "email": "sales@shrichakradhar.com",
+    "whatsapp": "https://api.whatsapp.com/send/?phone=919354637830&text=Hi&type=phone_number&app_absent=0",
+    "address": null,
+    "social": {
+      "facebook": "https://www.facebook.com/IGNOUPROJECTHELP",
+      "twitter": "https://twitter.com/IGNOUPROJECTS",
+      "linkedin": "https://in.linkedin.com/in/IGNOUPROJECT"
+    },
+    "productTypes": [
+      "Project"
+    ],
+    "isServiceBrand": true
+  },
+  {
+    "id": "ignouquestionpaper",
+    "domain": "ignouquestionpaper.com",
+    "name": "IGNOU Question Paper",
+    "tagline": "Previous years' solved IGNOU question papers, from ₹19",
+    "logo": "/brands/ignouquestionpaper/logo-placeholder.svg",
+    "favicon": "/brands/ignouquestionpaper/favicon.svg",
+    "colors": {
+      "primary": "#b91c1c",
+      "secondary": "#0f172a"
+    },
+    "phones": [
+      "919354637830",
+      "+919354637830"
+    ],
+    "email": "sales@shrichakradhar.com",
+    "whatsapp": "https://wa.me/919354637830?text=Hi%2C%20I%20need%20help%20with%20an%20IGNOU%20assignment%2Fproject.",
+    "address": "WZ-10A, 1st Floor, Gali No. 13, Sant Garh, Vishnu Garden, New Delhi 110018",
+    "social": {},
+    "productTypes": [
+      "QuestionPaper"
+    ]
+  },
+  {
+    "id": "ignousolvedassignment",
+    "domain": "ignousolvedassignment.com",
+    "name": "IGNOU Solved Assignment",
+    "tagline": "IGNOU solved assignments, PDF download",
+    "logo": "/brands/ignousolvedassignment/logo-placeholder.svg",
+    "favicon": "/brands/ignousolvedassignment/favicon.webp",
+    "colors": {
+      "primary": "#dd3333",
+      "secondary": "#0f172a"
+    },
+    "phones": [
+      "+919354637830",
+      "6203366805",
+      "919354637830",
+      "+918882594905"
+    ],
+    "email": "Sales@Shrichakradhar.com",
+    "whatsapp": "https://api.whatsapp.com/send/?phone=918882594905&text&app_absent=0",
+    "address": null,
+    "social": {
+      "facebook": "https://www.facebook.com/Shri-Chakradhar-Publication-106348514278187/",
+      "instagram": "https://www.instagram.com/shri__chakradhar/",
+      "twitter": "https://twitter.com/shri_chakradhar"
+    },
+    "productTypes": [
+      "SolvedAssignment"
+    ]
+  },
+  {
+    "id": "ignoustudymaterial",
+    "domain": "ignoustudymaterial.com",
+    "name": "IGNOU Study Material",
+    "tagline": "IGNOU guide books, help books & combo study material",
+    "logo": "/brands/ignoustudymaterial/logo.webp",
+    "favicon": "/brands/ignoustudymaterial/favicon-placeholder.svg",
+    "colors": {
+      "primary": "#1e293b",
+      "secondary": "#0f172a"
+    },
+    "phones": [
+      "+918882594905",
+      "+919354637830",
+      "919354637830"
+    ],
+    "email": "sales@shrichakradhar.com",
+    "whatsapp": "https://api.whatsapp.com/send?text=https%3A%2F%2Fignoustudymaterial.com%2F",
+    "address": "Shri Chakradhar Publication Pvt. Ltd.Dwarka Sector-7, New Delhi-110077, India",
+    "social": {
+      "facebook": "https://www.facebook.com/sharer/sharer.php?u=https://ignoustudymaterial.com/",
+      "twitter": "https://x.com/share?url=https://ignoustudymaterial.com/",
+      "linkedin": "https://www.linkedin.com/shareArticle?mini=true&url=https://ignoustudymaterial.com/"
+    },
+    "productTypes": [
+      "HelpBook",
+      "Combo"
+    ]
+  }
+]
