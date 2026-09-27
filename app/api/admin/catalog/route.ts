@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { setProductVisibility, updateProductPrice } from "@/lib/data";
-import type { BrandId } from "@/lib/types";
+import { SECTIONS } from "@/lib/sections";
+import type { BrandId, Product } from "@/lib/types";
 
-const ALL_BRANDS: BrandId[] = ["shrichakradhar", "ignouproject", "ignouquestionpaper", "ignousolvedassignment", "ignoustudymaterial"];
+/** Revalidates every place this product could be shown: its own page, its section, and the cross-cutting listing pages. */
+function revalidateProduct(product: Product) {
+  revalidatePath(`/product/${product.slug}`);
+  const section = SECTIONS.find((s) => s.types.includes(product.type));
+  if (section) revalidatePath(section.path);
+  revalidatePath("/");
+  revalidatePath("/combos");
+  revalidatePath("/offers");
+  revalidatePath("/search");
+}
 
 export async function PATCH(request: NextRequest) {
   const body = await request.json();
@@ -11,14 +21,14 @@ export async function PATCH(request: NextRequest) {
   if (body.action === "visibility") {
     const product = await setProductVisibility(body.productId, body.brandId as BrandId, body.visible);
     if (!product) return NextResponse.json({ error: "not found" }, { status: 404 });
-    for (const brandId of ALL_BRANDS) revalidatePath(`/s/${brandId}`, "layout");
+    revalidateProduct(product);
     return NextResponse.json({ product });
   }
 
   if (body.action === "price") {
     const product = await updateProductPrice(body.productId, Number(body.price));
     if (!product) return NextResponse.json({ error: "not found" }, { status: 404 });
-    for (const brandId of ALL_BRANDS) revalidatePath(`/s/${brandId}`, "layout");
+    revalidateProduct(product);
     return NextResponse.json({ product });
   }
 

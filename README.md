@@ -11,8 +11,12 @@ for the latest extraction numbers).
 ## Stack
 
 Next.js 15 (App Router) + TypeScript, Tailwind CSS v4 + shadcn/ui (base-ui primitives), Framer
-Motion, Fuse.js for search, Recharts for the admin dashboard. No database — the catalog lives in
-`/data/clean/*.json`, orders/project-jobs in `/data/runtime/*.json` (see "Known gaps" below).
+Motion, Fuse.js for search, Recharts for the admin dashboard. The catalog itself is static —
+`/data/clean/*.json`, built by the pipeline below, no database. Orders, project-job requests and
+admin catalog edits (visibility/price) go through `lib/orders-store.ts` / `lib/data.ts`'s
+overrides functions, which write to a local JSON file for zero-setup local dev and to Upstash
+Redis on Vercel (see "Deploying to Vercel" below) — Vercel's serverless functions can't write to
+the filesystem, so a real store is required there, not optional.
 
 ## Running locally
 
@@ -88,19 +92,42 @@ CSV export (Products → Export) or a WordPress WXR XML export dropped into
   resolution to subdomain-based (e.g. `studymaterial.localhost:3000`), for when each brand gets
   its own real subdomain later. Off by default so the demo works on one URL.
 
+## Deploying to Vercel
+
+1. **Push to GitHub and import the repo in Vercel** as normal (Next.js is auto-detected). The
+   repo is large (~750MB — mostly ~17,000 real scraped product images committed to `/public`,
+   plus git history), so the initial clone/build may take longer than a typical Next.js project;
+   this hasn't hit a hard Vercel limit in testing, but if it ever does, moving product images to
+   a CDN/blob store instead of committing them is the fix (see `scripts/extract/download-assets.ts`
+   for where they're written — swapping the destination is a contained change).
+2. **Connect a Redis store before your first real click-through**: in the Vercel dashboard,
+   Storage tab → Create Database → pick a Redis/Upstash option from the Marketplace → Connect to
+   this project. This auto-injects `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` (or
+   `KV_REST_API_URL`/`KV_REST_API_TOKEN` — `lib/kv.ts` checks both names). Without this step,
+   checkout, the custom project form, and the admin catalog visibility/price toggle will all
+   still render correctly but throw an error when actually submitted, since there's no writable
+   store connected.
+3. **Set `NEXT_PUBLIC_SITE_URL`** to your real domain (or your `*.vercel.app` URL) once you know
+   it, so sitemap.xml/robots.txt/JSON-LD emit correct absolute URLs — see `.env.example`. Without
+   it, `lib/site-url.ts` falls back to Vercel's own auto-injected deployment URL, which works but
+   changes per-deployment on the Hobby plan.
+4. Redeploy after adding the Redis integration/env vars (Vercel prompts for this automatically
+   when you connect a new integration).
+
+Everything read-only — browsing, search, all product/section pages, admin's dashboard/orders/
+customers views — works with zero extra setup, since those never touch the filesystem in
+production; only the three write paths above need the Redis step.
+
 ## Known gaps
 
-- **Order/project-job persistence is file-based** (`lib/orders-store.ts` → `data/runtime/*.json`),
-  per the "no database for the demo" brief — this is the seam a real Postgres table would sit
-  behind later. On Vercel's serverless runtime the filesystem is ephemeral/read-only per
-  invocation, so writes here won't reliably persist across requests once deployed; fine for a
-  local walkthrough, but a real backend is needed before this ships for real.
 - **ignouquestionpaper.com's brand color** (`#b91c1c`, red) is a reasoned manual guess, not
   scraped or sampled — the site's own CSS never exposed a usable theme-color signal and too few
   of its product images had downloaded yet to sample confidently when this was last checked. See
   DECISIONS.md.
 - **No dynamic OG image generation** — product/section pages don't yet generate a custom
   Open Graph image (brand logo + product cover composited). Static metadata only.
+- **Repo size** (~750MB) is dominated by committed product images. Works for a demo; a real
+  production build would serve these from a CDN/blob store instead of the git repo.
 - Full Lighthouse mobile-90 audit hasn't been run in this environment (no Lighthouse CLI
   available); manual checks confirm no horizontal scroll at 360/768/1280px and clean
   `next/image` usage throughout.

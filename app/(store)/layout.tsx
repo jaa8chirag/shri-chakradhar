@@ -1,14 +1,15 @@
-import { getBrands, getCatalog } from "@/lib/data";
+import { getBrands, getStorefrontCatalog } from "@/lib/data";
 import { buildSectionMenuData } from "@/lib/section-menu-data";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { DemoPill } from "@/components/layout/demo-pill";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { WhatsAppButton } from "@/components/brand/whatsapp-button";
+import { getSiteUrl } from "@/lib/site-url";
 
 export default async function StoreLayout({ children }: { children: React.ReactNode }) {
   const brands = await getBrands();
-  const catalog = await getCatalog();
+  const catalog = await getStorefrontCatalog();
   const masterBrand = brands.find((b) => b.id === "shrichakradhar")!;
   const sectionData = buildSectionMenuData(catalog, brands);
 
@@ -25,7 +26,7 @@ export default async function StoreLayout({ children }: { children: React.ReactN
     "@context": "https://schema.org",
     "@type": "Organization",
     name: masterBrand.name,
-    url: "https://shrichakradhar-demo.vercel.app",
+    url: getSiteUrl(),
     logo: masterBrand.logo,
     telephone: masterBrand.phones[0],
     email: masterBrand.email ?? undefined,

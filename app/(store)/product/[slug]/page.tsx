@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getBrands, getCatalog, getProductBySlugGlobal } from "@/lib/data";
+import { getBrands, getStorefrontCatalog, getProductBySlugGlobal } from "@/lib/data";
 import { SECTIONS } from "@/lib/sections";
 import { ProductCover } from "@/components/brand/product-cover";
 import { ProductCard } from "@/components/brand/product-card";
@@ -9,6 +9,7 @@ import { CourseCodeChip, TypeBadge, FormatBadge, LanguageBadge } from "@/compone
 import { PriceTag } from "@/components/brand/price-tag";
 import { AddToCartForm } from "@/components/brand/add-to-cart-form";
 import { Badge } from "@/components/ui/badge";
+import { getSiteUrl } from "@/lib/site-url";
 import type { Product } from "@/lib/types";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -27,7 +28,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const subBrand = brands.find((b) => b.id === (section?.subBrandId ?? product.availableOn[0]))!;
   const trackedBrandId = product.availableOn.includes(subBrand.id) ? subBrand.id : product.availableOn[0];
 
-  const catalog = await getCatalog();
+  const catalog = await getStorefrontCatalog();
   const siblings = findSiblings(product, catalog);
   const programmeMates = findProgrammeMates(product, catalog);
 
@@ -41,7 +42,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     brand: { "@type": "Brand", name: subBrand.name },
     offers: {
       "@type": "Offer",
-      url: `https://shrichakradhar-demo.vercel.app/product/${product.slug}`,
+      url: `${getSiteUrl()}/product/${product.slug}`,
       priceCurrency: "INR",
       price: product.price,
       availability: "https://schema.org/InStock",

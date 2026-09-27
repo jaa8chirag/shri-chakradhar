@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getBrands, getCatalog } from "@/lib/data";
+import { getBrands, getStorefrontCatalog } from "@/lib/data";
 import { SECTIONS, getProductsForSection, getSectionStartingPrice, type SectionId } from "@/lib/sections";
 import { filterCatalog, computeFacets, paginate, type CatalogFilters } from "@/lib/catalog-query";
 import { ProductCard } from "@/components/brand/product-card";
@@ -30,7 +30,7 @@ export default async function SectionPage({ params, searchParams }: { params: Pr
 
   const sp = await searchParams;
   const brands = await getBrands();
-  const catalog = await getCatalog();
+  const catalog = await getStorefrontCatalog();
   const subBrand = brands.find((b) => b.id === section.subBrandId)!;
   const sectionProducts = getProductsForSection(catalog, section.id as SectionId);
   const facets = computeFacets(sectionProducts);

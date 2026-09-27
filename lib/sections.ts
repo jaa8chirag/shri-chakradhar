@@ -79,7 +79,10 @@ export function getSectionForBrand(brandId: BrandId): SectionConfig | undefined 
 
 export function getProductsForSection(catalog: Product[], sectionId: SectionId): Product[] {
   const section = getSection(sectionId);
-  return catalog.filter((p) => section.types.includes(p.type));
+  // availableOn.length === 0 means admin has toggled this product off every brand — it's
+  // conceptually deleted from the unified storefront (though still visible in /admin/catalog
+  // so it can be toggled back on; that page must call getCatalog() directly, not this).
+  return catalog.filter((p) => section.types.includes(p.type) && p.availableOn.length > 0);
 }
 
 export function getSectionStartingPrice(catalog: Product[], sectionId: SectionId): number | null {

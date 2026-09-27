@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PenLine, Send, FileText, CheckCircle2 } from "lucide-react";
-import { getBrands, getCatalog } from "@/lib/data";
+import { getBrands, getStorefrontCatalog } from "@/lib/data";
 import { buildSectionMenuData } from "@/lib/section-menu-data";
 import { getProductsForSection } from "@/lib/sections";
 import { HeroSection } from "@/components/brand/hero-section";
@@ -22,7 +22,7 @@ const TIMELINE = [
 
 export default async function HomePage() {
   const brands = await getBrands();
-  const catalog = await getCatalog();
+  const catalog = await getStorefrontCatalog();
   const sectionData = buildSectionMenuData(catalog, brands);
 
   const programmeCounts = new Map<string, number>();

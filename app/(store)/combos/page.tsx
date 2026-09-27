@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getBrands, getCatalog } from "@/lib/data";
+import { getBrands, getStorefrontCatalog } from "@/lib/data";
 import { paginate } from "@/lib/catalog-query";
 import { ProductCard } from "@/components/brand/product-card";
 import { PageHeroBand } from "@/components/home/page-hero-band";
@@ -8,7 +8,7 @@ export const metadata = { title: "Combos" };
 
 export default async function CombosPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const { page } = await searchParams;
-  const catalog = await getCatalog();
+  const catalog = await getStorefrontCatalog();
   const brands = await getBrands();
   const masterBrand = brands.find((b) => b.id === "shrichakradhar")!;
   const brandLogo = (id: string) => brands.find((b) => b.id === id)?.logo;

@@ -1,4 +1,4 @@
-import { getBrands, getCatalog } from "@/lib/data";
+import { getBrands, getStorefrontCatalog } from "@/lib/data";
 import { buildSearchIndex, searchProducts } from "@/lib/search";
 import { GlobalSearchBar } from "@/components/layout/global-search-bar";
 import { ProductCard } from "@/components/brand/product-card";
@@ -10,7 +10,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string; programme?: string }> }) {
   const { q = "", programme } = await searchParams;
-  const catalog = await getCatalog();
+  const catalog = await getStorefrontCatalog();
   const brands = await getBrands();
   const brandLogo = (id: string) => brands.find((b) => b.id === id)?.logo;
 
