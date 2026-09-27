@@ -11,7 +11,7 @@ const DATA_DIR = path.join(process.cwd(), "data", "clean");
 
 type ProductDetails = Pick<Product, "description" | "shortDescription" | "categories" | "tags">;
 
-let cache: {
+const cache: {
   brands?: Brand[];
   catalog?: Product[];
   categories?: CategoryNode[];

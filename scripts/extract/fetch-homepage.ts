@@ -49,7 +49,7 @@ export async function fetchHomepage(site: SiteConfig): Promise<HomepageExtract> 
     if (el.length === 0) continue;
     // Lazy-load plugins leave `src` as a tiny placeholder (often a blank/near-empty inline SVG)
     // and put the real image in a data-* attribute until JS swaps it in.
-    let src = LAZY_ATTRS.map((attr) => el.attr(attr)).find(Boolean) ?? el.attr("src");
+    const src = LAZY_ATTRS.map((attr) => el.attr(attr)).find(Boolean) ?? el.attr("src");
     if (src && isRealImageUrl(src)) {
       extract.logoUrl = absolutize(src, base);
       break;

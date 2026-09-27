@@ -2,8 +2,7 @@ import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 
 // Fictional demo data for the CP-3 admin project kanban — clearly not real students.
-const STAGES = ["Topic", "Synopsis Draft", "Sent for Approval", "Revision", "Report Writing", "Delivered"];
-
+// Valid `stage` values: Topic, Synopsis Draft, Sent for Approval, Revision, Report Writing, Delivered.
 const jobs = [
   { studentName: "Ananya Verma (demo)", phone: "9800000001", programme: "MBA", courseCode: "MMPP-001", topic: "Impact of digital marketing on rural retail in Tier-2 India", stage: "Report Writing", dueOffsetDays: -2 },
   { studentName: "Rohit Sharma (demo)", phone: "9800000002", programme: "MCOM", courseCode: "MCOP-001", topic: "Working capital management in Indian FMCG companies", stage: "Sent for Approval", dueOffsetDays: 3 },
