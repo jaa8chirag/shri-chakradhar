@@ -31,8 +31,26 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const siblings = findSiblings(product, catalog);
   const programmeMates = findProgrammeMates(product, catalog);
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    image: product.images[0] ? [product.images[0]] : undefined,
+    description: product.shortDescription || product.title,
+    sku: product.id,
+    brand: { "@type": "Brand", name: subBrand.name },
+    offers: {
+      "@type": "Offer",
+      url: `https://shrichakradhar-demo.vercel.app/product/${product.slug}`,
+      priceCurrency: "INR",
+      price: product.price,
+      availability: "https://schema.org/InStock",
+    },
+  };
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
       <nav className="mb-4 text-sm text-muted-foreground">
         <Link href="/" className="hover:text-foreground">
           Home

@@ -21,8 +21,21 @@ export default async function StoreLayout({ children }: { children: React.ReactN
     .slice(0, 12)
     .map(([name]) => name);
 
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: masterBrand.name,
+    url: "https://shrichakradhar-demo.vercel.app",
+    logo: masterBrand.logo,
+    telephone: masterBrand.phones[0],
+    email: masterBrand.email ?? undefined,
+    address: masterBrand.address ?? undefined,
+    sameAs: Object.values(masterBrand.social),
+  };
+
   return (
     <div className="flex min-h-full flex-1 flex-col" data-brand={masterBrand.id} style={{ "--brand-primary": masterBrand.colors.primary, "--brand-secondary": masterBrand.colors.secondary } as React.CSSProperties}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       <SiteHeader masterBrand={masterBrand} sectionData={sectionData} topProgrammes={topProgrammes} />
       <main className="flex-1 pb-16 lg:pb-0">{children}</main>
       <SiteFooter masterBrand={masterBrand} />
