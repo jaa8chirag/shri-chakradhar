@@ -1,10 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { SearchBar } from "./search-bar";
-import type { BrandId } from "@/lib/types";
+import { GlobalSearchBar } from "@/components/layout/global-search-bar";
 
-export function HeroSection({ brandId, name, tagline }: { brandId: BrandId; name: string; tagline: string }) {
+export function HeroSection({ name, tagline }: { name: string; tagline: string }) {
   return (
     <section className="overflow-hidden border-b bg-gradient-to-b from-brand-primary/10 to-transparent px-4 py-12 sm:px-6 sm:py-16">
       <motion.div
@@ -35,7 +34,7 @@ export function HeroSection({ brandId, name, tagline }: { brandId: BrandId; name
           transition={{ duration: 0.5, delay: 0.3 }}
           className="mx-auto mt-8 max-w-xl"
         >
-          <SearchBar brandId={brandId} size="large" />
+          <GlobalSearchBar size="large" />
         </motion.div>
         <motion.p
           initial={{ opacity: 0 }}

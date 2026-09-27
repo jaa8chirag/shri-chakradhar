@@ -66,7 +66,7 @@
     "domain": "ignouquestionpaper.com",
     "name": "IGNOU Question Paper",
     "tagline": "Previous years' solved IGNOU question papers, from ₹19",
-    "logo": "/brands/ignouquestionpaper/logo-placeholder.svg",
+    "logo": "/brands/ignouquestionpaper/logo.webp",
     "favicon": "/brands/ignouquestionpaper/favicon.svg",
     "colors": {
       "primary": "#b91c1c",
@@ -89,7 +89,7 @@
     "domain": "ignousolvedassignment.com",
     "name": "IGNOU Solved Assignment",
     "tagline": "IGNOU solved assignments, PDF download",
-    "logo": "/brands/ignousolvedassignment/logo-placeholder.svg",
+    "logo": "/brands/ignousolvedassignment/logo.webp",
     "favicon": "/brands/ignousolvedassignment/favicon.webp",
     "colors": {
       "primary": "#dd3333",

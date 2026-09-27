@@ -83,7 +83,7 @@ export default async function DesignPage() {
               <p className="mb-3 text-sm font-medium text-muted-foreground">{brand.name}</p>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {sample.map((p) => (
-                  <ProductCard key={p.id} product={p} brandId={brand.id} brandLogo={brand.logo} />
+                  <ProductCard key={p.id} product={p} brandLogo={brand.logo} />
                 ))}
               </div>
             </div>

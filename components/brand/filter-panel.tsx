@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { X } from "lucide-react";
 import type { Facets, CatalogFilters } from "@/lib/catalog-query";
-import type { BrandId } from "@/lib/types";
 
 const FORMAT_LABEL: Record<string, string> = { SoftCopy: "Soft Copy (PDF)", HardCopy: "Hard Copy", Both: "Both" };
 const TYPE_LABEL: Record<string, string> = {
@@ -14,7 +13,7 @@ const TYPE_LABEL: Record<string, string> = {
   Other: "Other",
 };
 
-function buildHref(brandId: BrandId, current: CatalogFilters & { q?: string }, key: keyof CatalogFilters, value: string) {
+function buildHref(basePath: string, current: CatalogFilters & { q?: string }, key: keyof CatalogFilters, value: string) {
   const params = new URLSearchParams();
   const next = { ...current, [key]: current[key] === value ? undefined : value };
   for (const [k, v] of Object.entries(next)) {
@@ -22,16 +21,16 @@ function buildHref(brandId: BrandId, current: CatalogFilters & { q?: string }, k
   }
   params.delete("page");
   const qs = params.toString();
-  return `/s/${brandId}/browse${qs ? `?${qs}` : ""}`;
+  return `${basePath}${qs ? `?${qs}` : ""}`;
 }
 
-export function FilterPanel({ brandId, facets, current }: { brandId: BrandId; facets: Facets; current: CatalogFilters }) {
+export function FilterPanel({ basePath, facets, current }: { basePath: string; facets: Facets; current: CatalogFilters }) {
   const hasActiveFilters = !!(current.level || current.type || current.format || current.language || current.session || current.programme);
 
   return (
     <div className="space-y-6">
       {hasActiveFilters && (
-        <Link href={`/s/${brandId}/browse`} className="flex items-center gap-1 text-sm font-medium text-brand-primary hover:underline">
+        <Link href={basePath} className="flex items-center gap-1 text-sm font-medium text-brand-primary hover:underline">
           <X className="h-3.5 w-3.5" /> Clear all filters
         </Link>
       )}
@@ -39,7 +38,7 @@ export function FilterPanel({ brandId, facets, current }: { brandId: BrandId; fa
       {facets.levels.length > 0 && (
         <FilterGroup title="Level">
           {facets.levels.map(({ value, count }) => (
-            <FilterOption key={value} label={value} count={count} active={current.level === value} href={buildHref(brandId, current, "level", value)} />
+            <FilterOption key={value} label={value} count={count} active={current.level === value} href={buildHref(basePath, current, "level", value)} />
           ))}
         </FilterGroup>
       )}
@@ -47,7 +46,7 @@ export function FilterPanel({ brandId, facets, current }: { brandId: BrandId; fa
       {facets.types.length > 0 && (
         <FilterGroup title="Type">
           {facets.types.map(({ value, count }) => (
-            <FilterOption key={value} label={TYPE_LABEL[value] ?? value} count={count} active={current.type === value} href={buildHref(brandId, current, "type", value)} />
+            <FilterOption key={value} label={TYPE_LABEL[value] ?? value} count={count} active={current.type === value} href={buildHref(basePath, current, "type", value)} />
           ))}
         </FilterGroup>
       )}
@@ -55,7 +54,7 @@ export function FilterPanel({ brandId, facets, current }: { brandId: BrandId; fa
       {facets.formats.length > 0 && (
         <FilterGroup title="Format">
           {facets.formats.map(({ value, count }) => (
-            <FilterOption key={value} label={FORMAT_LABEL[value] ?? value} count={count} active={current.format === value} href={buildHref(brandId, current, "format", value)} />
+            <FilterOption key={value} label={FORMAT_LABEL[value] ?? value} count={count} active={current.format === value} href={buildHref(basePath, current, "format", value)} />
           ))}
         </FilterGroup>
       )}
@@ -63,7 +62,7 @@ export function FilterPanel({ brandId, facets, current }: { brandId: BrandId; fa
       {facets.languages.length > 0 && (
         <FilterGroup title="Language">
           {facets.languages.map(({ value, count }) => (
-            <FilterOption key={value} label={value} count={count} active={current.language === value} href={buildHref(brandId, current, "language", value)} />
+            <FilterOption key={value} label={value} count={count} active={current.language === value} href={buildHref(basePath, current, "language", value)} />
           ))}
         </FilterGroup>
       )}
@@ -71,7 +70,7 @@ export function FilterPanel({ brandId, facets, current }: { brandId: BrandId; fa
       {facets.sessions.length > 0 && (
         <FilterGroup title="Session">
           {facets.sessions.slice(0, 6).map(({ value, count }) => (
-            <FilterOption key={value} label={value} count={count} active={current.session === value} href={buildHref(brandId, current, "session", value)} />
+            <FilterOption key={value} label={value} count={count} active={current.session === value} href={buildHref(basePath, current, "session", value)} />
           ))}
         </FilterGroup>
       )}

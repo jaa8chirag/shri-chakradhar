@@ -7,9 +7,9 @@ import { Card } from "@/components/ui/card";
 import { ProductCover } from "./product-cover";
 import { CourseCodeChip } from "./badges";
 import { PriceTag } from "./price-tag";
-import type { BrandId, Product } from "@/lib/types";
+import type { Product } from "@/lib/types";
 
-export function ProductCard({ product, brandId, brandLogo }: { product: Product; brandId: BrandId; brandLogo?: string }) {
+export function ProductCard({ product, brandLogo }: { product: Product; brandLogo?: string }) {
   const image = product.images[0];
 
   return (
@@ -19,7 +19,7 @@ export function ProductCard({ product, brandId, brandLogo }: { product: Product;
       transition={{ type: "spring", stiffness: 350, damping: 22 }}
       className="h-full"
     >
-      <Link href={`/s/${brandId}/p/${product.slug}`} className="group block h-full">
+      <Link href={`/product/${product.slug}`} className="group block h-full">
         <Card className="gap-3 overflow-hidden p-3 transition-shadow hover:shadow-md">
           <div className="relative overflow-hidden rounded-xl">
             {image ? (

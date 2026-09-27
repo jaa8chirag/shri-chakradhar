@@ -62,6 +62,14 @@ export async function getProductBySlug(brandId: BrandId, slug: string): Promise<
   return { ...product, ...(await getProductDetails(product.id)) };
 }
 
+/** Brand-agnostic lookup — the unified store's product page isn't scoped to any one brand. */
+export async function getProductBySlugGlobal(slug: string): Promise<Product | undefined> {
+  const catalog = await getCatalog();
+  const product = catalog.find((p) => p.slug === slug);
+  if (!product) return undefined;
+  return { ...product, ...(await getProductDetails(product.id)) };
+}
+
 export async function getCategories(): Promise<CategoryNode[]> {
   if (!cache.categories) cache.categories = await readJson<CategoryNode[]>("categories.json");
   return cache.categories;

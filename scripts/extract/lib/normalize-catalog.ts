@@ -7,6 +7,21 @@ import { extractCourseCodes, extractProgramme, extractLevel, extractLanguage, ex
 import { sanitizeHtml, stripToText } from "./sanitize-html";
 import { scrubOverclaims } from "./content-policy";
 
+/**
+ * WordPress stores some Hindi-titled products' slugs as literally percent-encoded ASCII
+ * (e.g. "...%e0%a4%b8%e0%a4%ae...") rather than decoded Unicode — ~5% of the catalog. Left as-is,
+ * Next.js's dynamic route param matching doesn't reliably resolve them. Decoding once here gives
+ * a normal Devanagari slug that routes exactly like any other UTF-8 URL segment.
+ */
+function normalizeSlug(slug: string): string {
+  if (!slug.includes("%")) return slug;
+  try {
+    return decodeURIComponent(slug);
+  } catch {
+    return slug;
+  }
+}
+
 /** Pre-merge product record: one per (site, product) pair, availableOn always [site] at this stage. */
 export async function loadSiteProducts(site: SiteConfig): Promise<Product[]> {
   const rawDir = path.join(process.cwd(), "data", "raw", site.id);
@@ -36,7 +51,7 @@ async function loadFromStoreApi(site: SiteConfig, rawDir: string): Promise<Produ
     return buildProduct({
       brandId: site.id as BrandId,
       idSeed: `${site.id}-${p.id}`,
-      slug: p.slug,
+      slug: normalizeSlug(p.slug),
       title: decodeEntities(p.name ?? ""),
       sourceUrl: p.permalink,
       sku: p.sku || null,
@@ -72,7 +87,7 @@ async function loadFromHtmlFallback(site: SiteConfig, rawDir: string): Promise<P
     return buildProduct({
       brandId: site.id as BrandId,
       idSeed: `${site.id}-${p.id}`,
-      slug: p.slug,
+      slug: normalizeSlug(p.slug),
       title,
       sourceUrl: p.link,
       sku: p.sku,

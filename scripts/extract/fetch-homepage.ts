@@ -55,6 +55,29 @@ export async function fetchHomepage(site: SiteConfig): Promise<HomepageExtract> 
       break;
     }
   }
+  // JSON-LD Organization schema (from Rank Math/Yoast) reliably carries the real logo
+  // regardless of theme — this is what actually found the logo for sites whose header
+  // markup doesn't use any recognizable "logo" class (e.g. Woodmart-themed stores).
+  if (!extract.logoUrl) {
+    $('script[type="application/ld+json"]').each((_, el) => {
+      if (extract.logoUrl) return;
+      try {
+        const json = JSON.parse($(el).contents().text());
+        const graph = Array.isArray(json["@graph"]) ? json["@graph"] : [json];
+        for (const node of graph) {
+          const logo = node?.logo;
+          const logoUrl = typeof logo === "string" ? logo : logo?.url ?? logo?.contentUrl;
+          if (logoUrl && isRealImageUrl(logoUrl)) {
+            extract.logoUrl = absolutize(logoUrl, base);
+            break;
+          }
+        }
+      } catch {
+        // malformed JSON-LD — skip
+      }
+    });
+  }
+
   if (!extract.logoUrl) {
     const og = $('meta[property="og:image"]').attr("content");
     if (og && isRealImageUrl(og)) extract.logoUrl = absolutize(og, base);

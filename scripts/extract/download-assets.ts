@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import { SITES } from "./sites.config";
+import { resolveLogoUrl } from "./lib/normalize-brand";
 import type { Brand, Product } from "../../lib/types";
 
 const USER_AGENT = "GGM-Technologies-Demo-Builder/1.0";
@@ -26,7 +27,8 @@ async function main() {
     const brand = brands.find((b) => b.id === site.id);
     if (!brand) continue;
     const homepage = await readJsonSafe<any>(path.join(RAW_DIR, site.id, "homepage-extract.json"));
-    const ok = await downloadBrandAssets(brand, homepage?.logoUrl ?? null, homepage?.faviconUrl ?? null);
+    const siteInfo = await readJsonSafe<any>(path.join(RAW_DIR, site.id, "wp-site.json"));
+    const ok = await downloadBrandAssets(brand, resolveLogoUrl(homepage, siteInfo), homepage?.faviconUrl ?? null);
     if (ok) logosOk++;
     else logosFailed++;
   }
@@ -62,7 +64,7 @@ async function downloadBrandAssets(brand: Brand, logoUrl: string | null, favicon
   let ok = true;
 
   if (logoUrl) {
-    const localLogo = await fetchAndSave(logoUrl, path.join(dir, "logo"), 400);
+    const localLogo = await fetchAndSave(logoUrl, path.join(dir, "logo"), 400, 120);
     if (localLogo) brand.logo = `/brands/${brand.id}/${localLogo}`;
     else ok = false;
   } else {
@@ -87,8 +89,12 @@ async function downloadProductImage(brandId: string, slug: string, url: string):
   return ok ? publicPath : null;
 }
 
-/** Returns the filename (e.g. "logo.svg" / "logo.webp") that was actually written, or null on failure. */
-async function fetchAndSave(url: string, outBase: string, maxDim: number): Promise<string | null> {
+/**
+ * Returns the filename (e.g. "logo.svg" / "logo.webp") that was actually written, or null on
+ * failure. `minWidth` rejects logos that are really just a favicon-sized icon — better to fall
+ * back to BrandLogo's colored-initials wordmark than render a blurry 32px image at header size.
+ */
+async function fetchAndSave(url: string, outBase: string, maxDim: number, minWidth?: number): Promise<string | null> {
   try {
     const res = await fetch(url, { headers: { "User-Agent": USER_AGENT }, signal: AbortSignal.timeout(20000) });
     if (!res.ok) return null;
@@ -96,8 +102,13 @@ async function fetchAndSave(url: string, outBase: string, maxDim: number): Promi
     const ext = path.extname(new URL(url).pathname).toLowerCase();
     const base = path.basename(outBase);
     if (ext === ".svg") {
+      // SVGs are resolution-independent — never rejected on size.
       await writeFile(`${outBase}.svg`, buf);
       return `${base}.svg`;
+    }
+    if (minWidth) {
+      const metadata = await sharp(buf).metadata();
+      if (!metadata.width || metadata.width < minWidth) return null;
     }
     await sharp(buf)
       .resize({ width: maxDim, height: maxDim, fit: "inside", withoutEnlargement: true })

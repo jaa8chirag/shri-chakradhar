@@ -33,19 +33,25 @@ const BRAND_META: Record<string, { tagline: string; productTypes: ProductType[];
   },
 };
 
+/** Best available remote logo URL: homepage extraction (custom-logo / JSON-LD / og:image) first, then the WP site icon. */
+export function resolveLogoUrl(homepage: any, siteInfo: any): string | null {
+  return homepage?.logoUrl ?? siteInfo?.site_icon_url ?? null;
+}
+
 export async function buildBrand(site: SiteConfig): Promise<Brand> {
   const rawDir = path.join(process.cwd(), "data", "raw", site.id);
   const meta = BRAND_META[site.id];
 
   const siteInfo = await readJsonSafe<any>(path.join(rawDir, "wp-site.json"));
   const homepage = await readJsonSafe<any>(path.join(rawDir, "homepage-extract.json"));
+  const logoUrl = resolveLogoUrl(homepage, siteInfo);
 
   return {
     id: site.id as Brand["id"],
     domain: site.domain,
     name: siteInfo?.name ?? site.name,
     tagline: meta.tagline,
-    logo: homepage?.logoUrl ? toLocalBrandPath(site.id, homepage.logoUrl) : `/brands/${site.id}/logo-placeholder.svg`,
+    logo: logoUrl ? toLocalBrandPath(site.id, logoUrl) : `/brands/${site.id}/logo-placeholder.svg`,
     favicon: homepage?.faviconUrl ? toLocalBrandPath(site.id, homepage.faviconUrl, "favicon") : `/brands/${site.id}/favicon-placeholder.svg`,
     colors: { primary: homepage?.colors?.primary ?? meta.fallbackPrimary, secondary: homepage?.colors?.secondary ?? "#0f172a" },
     phones: homepage?.phones ?? [],

@@ -2,9 +2,8 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { BrandId } from "@/lib/types";
 
-export function SortSelect({ brandId }: { brandId: BrandId }) {
+export function SortSelect({ basePath }: { basePath: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const current = searchParams.get("sort") ?? "relevance";
@@ -14,7 +13,7 @@ export function SortSelect({ brandId }: { brandId: BrandId }) {
     if (!value || value === "relevance") params.delete("sort");
     else params.set("sort", value);
     params.delete("page");
-    router.push(`/s/${brandId}/browse?${params.toString()}`);
+    router.push(`${basePath}?${params.toString()}`);
   }
 
   return (
