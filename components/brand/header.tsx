@@ -1,11 +1,14 @@
 import Link from "next/link";
-import { ShoppingCart, Menu } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "./brand-logo";
 import { SearchBar } from "./search-bar";
+import { MegaMenu } from "./mega-menu";
+import { MobileMenuDrawer } from "./mobile-menu-drawer";
+import type { MenuLevel } from "@/lib/catalog-query";
 import type { Brand } from "@/lib/types";
 
-export function Header({ brand }: { brand: Brand }) {
+export function Header({ brand, menu }: { brand: Brand; menu: MenuLevel[] }) {
   return (
     <header data-brand={brand.id} className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:gap-6 sm:px-6">
@@ -19,7 +22,8 @@ export function Header({ brand }: { brand: Brand }) {
         </div>
 
         <nav className="ml-auto hidden items-center gap-6 text-sm font-medium sm:flex">
-          <Link href={`/s/${brand.id}/browse`} className="text-muted-foreground transition-colors hover:text-foreground">
+          <MegaMenu brandId={brand.id} menu={menu} />
+          <Link href={`/s/${brand.id}/browse`} className="text-muted-foreground transition-colors hover:text-foreground lg:hidden">
             Browse
           </Link>
           <Link href={`/s/${brand.id}/about`} className="text-muted-foreground transition-colors hover:text-foreground">
@@ -42,9 +46,7 @@ export function Header({ brand }: { brand: Brand }) {
             </Link>
           }
         />
-        <Button variant="ghost" size="icon" className="sm:hidden" aria-label="Menu">
-          <Menu className="h-5 w-5" />
-        </Button>
+        <MobileMenuDrawer brandId={brand.id} menu={menu} />
       </div>
       <div className="border-t px-4 py-2 sm:hidden">
         <SearchBar brandId={brand.id} />

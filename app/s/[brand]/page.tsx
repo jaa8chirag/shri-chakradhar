@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Search as SearchIcon, PackageCheck, Truck } from "lucide-react";
 import { getBrand, getProductsForBrand, getPages } from "@/lib/data";
-import { SearchBar } from "@/components/brand/search-bar";
+import { HeroSection } from "@/components/brand/hero-section";
+import { FadeInSection } from "@/components/brand/fade-in-section";
 import { ProductCard } from "@/components/brand/product-card";
 import { TrustStrip } from "@/components/brand/trust-strip";
 import { ServiceBrandHome } from "@/components/brand/service-brand-home";
@@ -34,19 +35,10 @@ export default async function BrandHomePage({ params }: { params: Promise<{ bran
 
   return (
     <div>
-      <section className="border-b bg-gradient-to-b from-brand-primary/5 to-transparent px-4 py-12 sm:px-6 sm:py-16">
-        <div className="mx-auto max-w-3xl text-center">
-          <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-5xl">{brand.name}</h1>
-          <p className="mt-3 text-base text-muted-foreground sm:text-lg">{brand.tagline}</p>
-          <div className="mx-auto mt-8 max-w-xl">
-            <SearchBar brandId={brand.id} size="large" />
-          </div>
-          <p className="mt-2 text-xs text-muted-foreground">Try searching a course code like MMPC 001, BEGC 134 or BEVAE 181</p>
-        </div>
-      </section>
+      <HeroSection brandId={brand.id} name={brand.name} tagline={brand.tagline} />
 
       {programmes.length > 0 && (
-        <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <FadeInSection className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
           <h2 className="font-heading text-lg font-semibold">Browse by programme</h2>
           <div className="mt-4 flex flex-wrap gap-2">
             {programmes.map((programme) => (
@@ -65,11 +57,11 @@ export default async function BrandHomePage({ params }: { params: Promise<{ bran
               View all <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
-        </section>
+        </FadeInSection>
       )}
 
       {featured.length > 0 && (
-        <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <FadeInSection className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
           <div className="flex items-center justify-between">
             <h2 className="font-heading text-lg font-semibold">Popular right now</h2>
             <Link href={`/s/${brand.id}/browse`} className="text-sm font-medium text-brand-primary hover:underline">
@@ -81,22 +73,22 @@ export default async function BrandHomePage({ params }: { params: Promise<{ bran
               <ProductCard key={p.id} product={p} brandId={brand.id} brandLogo={brand.logo} />
             ))}
           </div>
-        </section>
+        </FadeInSection>
       )}
 
-      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      <FadeInSection className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <h2 className="font-heading text-lg font-semibold">How it works</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <HowItWorksCard icon={SearchIcon} step="1" title="Search your course code" body="Find your exact course by code — no need to hunt through categories." />
           <HowItWorksCard icon={PackageCheck} step="2" title="Choose your format" body="Pick soft copy (PDF) or hard copy, in English or Hindi, whichever suits you." />
           <HowItWorksCard icon={Truck} step="3" title="Get it fast" body="Instant download for soft copy, or quick delivery across India for hard copy." />
         </div>
-      </section>
+      </FadeInSection>
 
       <TrustStrip />
 
       {brandPages && brandPages.posts.length > 0 && (
-        <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+        <FadeInSection className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
           <h2 className="font-heading text-lg font-semibold">From the blog</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-3">
             {brandPages.posts.slice(0, 3).map((post) => (
@@ -107,10 +99,10 @@ export default async function BrandHomePage({ params }: { params: Promise<{ bran
               </Card>
             ))}
           </div>
-        </section>
+        </FadeInSection>
       )}
 
-      <section className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
+      <FadeInSection className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
         <Card className="flex flex-col items-center gap-4 bg-brand-primary/5 p-8 text-center sm:flex-row sm:justify-between sm:text-left">
           <div>
             <h2 className="font-heading text-xl font-bold">Can&apos;t find your course?</h2>
@@ -118,7 +110,7 @@ export default async function BrandHomePage({ params }: { params: Promise<{ bran
           </div>
           <Button size="lg" nativeButton={false} render={<Link href={`/s/${brand.id}/contact`}>Contact us</Link>} />
         </Card>
-      </section>
+      </FadeInSection>
     </div>
   );
 }

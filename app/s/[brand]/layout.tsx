@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
-import { getBrand, getBrands } from "@/lib/data";
+import { getBrand, getBrands, getProductsForBrand } from "@/lib/data";
+import { buildBrandMenu } from "@/lib/catalog-query";
 import { Header } from "@/components/brand/header";
 import { MobileBottomNav } from "@/components/brand/mobile-bottom-nav";
 import { WhatsAppButton } from "@/components/brand/whatsapp-button";
@@ -17,11 +18,14 @@ export default async function BrandLayout({ children, params }: { children: Reac
   const brand = await getBrand(brandId as BrandId);
   if (!brand) notFound();
 
+  const products = await getProductsForBrand(brand.id);
+  const menu = buildBrandMenu(products);
+
   const brandStyle = { "--brand-primary": brand.colors.primary, "--brand-secondary": brand.colors.secondary } as CSSProperties;
 
   return (
     <div data-brand={brand.id} style={brandStyle} className="flex min-h-full flex-1 flex-col">
-      <Header brand={brand} />
+      <Header brand={brand} menu={menu} />
       <main className="flex-1 pb-16 sm:pb-0">{children}</main>
       <Footer brand={brand} />
       {brand.whatsapp && <WhatsAppButton number={brand.phones[0] ?? "919354637830"} message={`Hi, I have a question about ${brand.name}`} />}

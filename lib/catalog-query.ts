@@ -49,6 +49,34 @@ export function paginate<T>(items: T[], page = 1, pageSize = PAGE_SIZE): { items
   return { items: items.slice(start, start + pageSize), totalPages, page: safePage };
 }
 
+export interface MenuLevel {
+  level: ProductLevel;
+  programmes: { name: string; count: number }[];
+}
+
+/** Level -> Programme structure for a single brand's own catalog (not the global tree), used by the header's mega-menu. */
+export function buildBrandMenu(products: Product[]): MenuLevel[] {
+  const levelOrder: ProductLevel[] = ["Masters", "Bachelors", "Diploma", "Certificate"];
+  const byLevel = new Map<ProductLevel, Map<string, number>>();
+
+  for (const p of products) {
+    if (!p.level || !p.programme) continue;
+    if (!byLevel.has(p.level)) byLevel.set(p.level, new Map());
+    const programmes = byLevel.get(p.level)!;
+    programmes.set(p.programme, (programmes.get(p.programme) ?? 0) + 1);
+  }
+
+  return levelOrder
+    .filter((level) => byLevel.has(level))
+    .map((level) => ({
+      level,
+      programmes: Array.from(byLevel.get(level)!.entries())
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 12)
+        .map(([name, count]) => ({ name, count })),
+    }));
+}
+
 export interface Facets {
   levels: { value: ProductLevel; count: number }[];
   types: { value: ProductType; count: number }[];

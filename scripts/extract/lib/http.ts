@@ -36,8 +36,13 @@ export async function politeFetch<T = unknown>(url: string, opts: FetchOptions):
   const cacheFile = path.join(cacheDir, `${cacheKeyFor(url)}.json`);
 
   if (existsSync(cacheFile)) {
-    const cached = JSON.parse(await readFile(cacheFile, "utf-8"));
-    return cached.status >= 200 && cached.status < 300 ? (cached.body as T) : null;
+    try {
+      const cached = JSON.parse(await readFile(cacheFile, "utf-8"));
+      return cached.status >= 200 && cached.status < 300 ? (cached.body as T) : null;
+    } catch {
+      // A previous run was killed mid-write (e.g. a background task stopped for a data-fix
+      // restart) and left a truncated cache file — treat it as a miss and re-fetch below.
+    }
   }
 
   const host = new URL(url).host;

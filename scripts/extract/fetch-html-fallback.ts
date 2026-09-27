@@ -77,9 +77,12 @@ async function fetchProductDetail(site: SiteConfig, listItem: any) {
   const skuMatch = html.match(/class="sku"[^>]*>([^<]+)</);
   if (skuMatch && skuMatch[1].trim() !== "N/A") base.sku = skuMatch[1].trim();
 
-  if (base.price === null) {
+  // RankMath's og:image is present on every product page regardless of whether the price came
+  // from the variations blob or the simpler sku/price pair — this must not be gated on price
+  // being unset, or simple (non-variable) products that already got a price never get an image.
+  if (!base.image) {
     const ogImage = html.match(/<meta property="og:image" content="([^"]+)"/);
-    if (!base.image && ogImage) base.image = ogImage[1];
+    if (ogImage) base.image = ogImage[1];
   }
 
   return base;
