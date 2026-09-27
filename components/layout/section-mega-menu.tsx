@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { GraduationCap } from "lucide-react";
@@ -19,29 +19,52 @@ export interface SectionMenuData {
 export function SectionMegaMenu({ data }: { data: SectionMenuData[] }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [activeLevel, setActiveLevel] = useState<Record<string, string>>({});
-  let closeTimer: ReturnType<typeof setTimeout>;
+  const openTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const closeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   function open(id: string) {
-    clearTimeout(closeTimer);
-    setOpenId(id);
+    clearTimeout(closeTimer.current);
+    openTimer.current = setTimeout(() => setOpenId(id), 150);
   }
   function scheduleClose() {
-    closeTimer = setTimeout(() => setOpenId(null), 150);
+    clearTimeout(openTimer.current);
+    closeTimer.current = setTimeout(() => setOpenId(null), 150);
+  }
+  function openNow(id: string) {
+    clearTimeout(closeTimer.current);
+    clearTimeout(openTimer.current);
+    setOpenId(id);
   }
 
   return (
-    <nav className="hidden items-center gap-1 lg:flex" onKeyDown={(e) => e.key === "Escape" && setOpenId(null)}>
+    <nav className="hidden items-center gap-1 lg:flex">
       {data.map(({ section, subBrand, startingPrice, levels }) => {
         const isOpen = openId === section.id;
         const currentLevel = activeLevel[section.id] ?? levels[0]?.level;
         const levelData = levels.find((l) => l.level === currentLevel);
 
         return (
-          <div key={section.id} className="relative" onMouseEnter={() => open(section.id)} onMouseLeave={scheduleClose}>
+          <div
+            key={section.id}
+            className="relative"
+            onMouseEnter={() => open(section.id)}
+            onMouseLeave={scheduleClose}
+            onFocus={() => openNow(section.id)}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpenId(null);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setOpenId(null);
+                (e.currentTarget.querySelector("a") as HTMLAnchorElement | null)?.focus();
+              }
+            }}
+          >
             <Link
               href={section.path}
               className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
               aria-expanded={isOpen}
+              aria-haspopup="true"
             >
               {section.navLabel}
             </Link>
@@ -59,7 +82,9 @@ export function SectionMegaMenu({ data }: { data: SectionMenuData[] }) {
                     {levels.map((l) => (
                       <button
                         key={l.level}
+                        type="button"
                         onMouseEnter={() => setActiveLevel((prev) => ({ ...prev, [section.id]: l.level }))}
+                        onFocus={() => setActiveLevel((prev) => ({ ...prev, [section.id]: l.level }))}
                         className={`block w-full px-4 py-2 text-left text-sm transition-colors ${
                           currentLevel === l.level ? "bg-background font-medium text-brand-primary" : "text-muted-foreground hover:text-foreground"
                         }`}
