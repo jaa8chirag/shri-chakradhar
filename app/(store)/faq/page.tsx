@@ -1,4 +1,7 @@
 import { getBrands, getPages } from "@/lib/data";
+import { PageHeroBand } from "@/components/home/page-hero-band";
+import { Card } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export const metadata = { title: "FAQ" };
 
@@ -10,21 +13,33 @@ export default async function FaqPage() {
   const policies = pages[masterBrand.id]?.policies ?? [];
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      <h1 className="font-heading text-2xl font-bold">Frequently Asked Questions</h1>
-      {faq ? <div className="prose prose-sm mt-6 max-w-none" dangerouslySetInnerHTML={{ __html: faq }} /> : <p className="mt-6 text-muted-foreground">No FAQ page found yet.</p>}
+    <div>
+      <PageHeroBand brand={masterBrand} title="Frequently Asked Questions" subtitle="Everything about ordering, delivery and support." />
+      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+        <Card className="overflow-x-auto p-6 sm:p-8">
+          {faq ? (
+            <div className="prose prose-sm max-w-none prose-headings:font-heading prose-table:w-full" dangerouslySetInnerHTML={{ __html: faq }} />
+          ) : (
+            <p className="text-muted-foreground">No FAQ page found yet.</p>
+          )}
+        </Card>
 
-      {policies.length > 0 && (
-        <div className="mt-12 space-y-8 border-t pt-8">
-          <h2 className="font-heading text-xl font-bold">Policies</h2>
-          {policies.map((p) => (
-            <div key={p.title}>
-              <h3 className="font-heading font-semibold">{p.title}</h3>
-              <div className="prose prose-sm mt-2 max-w-none" dangerouslySetInnerHTML={{ __html: p.content }} />
-            </div>
-          ))}
-        </div>
-      )}
+        {policies.length > 0 && (
+          <Card className="mt-8 p-2 sm:p-4">
+            <h2 className="px-4 pt-4 font-heading text-xl font-bold">Policies</h2>
+            <Accordion className="w-full px-2">
+              {policies.map((p) => (
+                <AccordionItem key={p.title} value={p.title}>
+                  <AccordionTrigger className="text-sm font-medium">{p.title}</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="prose prose-sm max-w-none overflow-x-auto prose-headings:font-heading" dangerouslySetInnerHTML={{ __html: p.content }} />
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }
