@@ -5,8 +5,8 @@ import { getRedis } from "./kv";
 import type { Order, ProjectJob } from "./types";
 
 /**
- * Demo persistence: orders/project-jobs live in Upstash Redis when the deployment is
- * connected to one (see lib/kv.ts) — required on Vercel, whose serverless functions can't
+ * Demo persistence: orders/project-jobs live in Redis when the deployment is connected to
+ * one (see lib/kv.ts) — required on Vercel, whose serverless functions can't
  * write to the filesystem — and fall back to a local JSON file for zero-setup local dev.
  * Either way, every caller goes through these functions, never touches the store directly,
  * which is the seam that would become a real Postgres table later.

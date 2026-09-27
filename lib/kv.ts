@@ -1,20 +1,35 @@
-import { Redis } from "@upstash/redis";
+import IORedis from "ioredis";
 
-let client: Redis | null | undefined;
+interface KvClient {
+  get<T>(key: string): Promise<T | null>;
+  set(key: string, value: unknown): Promise<void>;
+}
+
+let client: KvClient | null | undefined;
+
+function wrap(raw: IORedis): KvClient {
+  return {
+    async get<T>(key: string) {
+      const value = await raw.get(key);
+      return value === null ? null : (JSON.parse(value) as T);
+    },
+    async set(key: string, value: unknown) {
+      await raw.set(key, JSON.stringify(value));
+    },
+  };
+}
 
 /**
- * Returns an Upstash Redis client if the project is connected to one (via Vercel Marketplace
- * or a direct Upstash account), or null if not — which is the normal case for local dev.
- * Every write path in this app falls back to the local JSON file store when this is null, so
- * `pnpm dev` needs zero setup; only the deployed Vercel site needs a real store connected,
- * since that's the only place the filesystem is read-only.
+ * Returns a Redis client if the project is connected to one (via Vercel Marketplace's Redis
+ * integration, which injects a standard `REDIS_URL` connection string), or null if not — which
+ * is the normal case for local dev. Every write path in this app falls back to the local JSON
+ * file store when this is null, so `pnpm dev` needs zero setup; only the deployed Vercel site
+ * needs a real store connected, since that's the only place the filesystem is read-only.
  */
-export function getRedis(): Redis | null {
+export function getRedis(): KvClient | null {
   if (client !== undefined) return client;
 
-  const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
-
-  client = url && token ? new Redis({ url, token }) : null;
+  const url = process.env.REDIS_URL;
+  client = url ? wrap(new IORedis(url)) : null;
   return client;
 }

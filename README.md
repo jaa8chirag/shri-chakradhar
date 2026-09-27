@@ -14,9 +14,9 @@ Next.js 15 (App Router) + TypeScript, Tailwind CSS v4 + shadcn/ui (base-ui primi
 Motion, Fuse.js for search, Recharts for the admin dashboard. The catalog itself is static —
 `/data/clean/*.json`, built by the pipeline below, no database. Orders, project-job requests and
 admin catalog edits (visibility/price) go through `lib/orders-store.ts` / `lib/data.ts`'s
-overrides functions, which write to a local JSON file for zero-setup local dev and to Upstash
-Redis on Vercel (see "Deploying to Vercel" below) — Vercel's serverless functions can't write to
-the filesystem, so a real store is required there, not optional.
+overrides functions, which write to a local JSON file for zero-setup local dev and to Redis on
+Vercel (see "Deploying to Vercel" below) — Vercel's serverless functions can't write to the
+filesystem, so a real store is required there, not optional.
 
 ## Running locally
 
@@ -101,12 +101,11 @@ CSV export (Products → Export) or a WordPress WXR XML export dropped into
    a CDN/blob store instead of committing them is the fix (see `scripts/extract/download-assets.ts`
    for where they're written — swapping the destination is a contained change).
 2. **Connect a Redis store before your first real click-through**: in the Vercel dashboard,
-   Storage tab → Create Database → pick a Redis/Upstash option from the Marketplace → Connect to
-   this project. This auto-injects `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` (or
-   `KV_REST_API_URL`/`KV_REST_API_TOKEN` — `lib/kv.ts` checks both names). Without this step,
-   checkout, the custom project form, and the admin catalog visibility/price toggle will all
-   still render correctly but throw an error when actually submitted, since there's no writable
-   store connected.
+   Storage tab → Create Database → Redis → Connect to this project. This auto-injects
+   `REDIS_URL` (a standard `redis://`/`rediss://` connection string, read via `ioredis` in
+   `lib/kv.ts`). Without this step, checkout, the custom project form, and the admin catalog
+   visibility/price toggle will all still render correctly but throw an error when actually
+   submitted, since there's no writable store connected.
 3. **Set `NEXT_PUBLIC_SITE_URL`** to your real domain (or your `*.vercel.app` URL) once you know
    it, so sitemap.xml/robots.txt/JSON-LD emit correct absolute URLs — see `.env.example`. Without
    it, `lib/site-url.ts` falls back to Vercel's own auto-injected deployment URL, which works but
